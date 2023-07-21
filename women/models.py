@@ -2,7 +2,8 @@ from django.db import models
 
 
 class Women(models.Model):
-    title = models.CharField(max_length=255)
+    ''' Класс для представления женщин-знаменитостей '''
+    title = models.CharField(max_length=255, related_name="", verbose_name='title', null=True)
     content = models.TextField(blank=True)
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
@@ -11,6 +12,9 @@ class Women(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        db_name = 'Women'
 
 
 class Category(models.Model):
