@@ -1,32 +1,18 @@
-#import io
 from rest_framework import serializers
 from .models import Women
-#from rest_framework.parsers import JSONParser
-#from rest_framework.renderers import JSONRenderer
 
 
-
-
-# class WomenModel:
-#     def __init__(self, title, content):
-#         self.title = title
-#         self.content = content
-#
 class WomenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Women
         fields = ("title", "content", "cat")
-        #fields = "__all__"
+        # fields = "__all__"
 
-
-
-
-
-
-
-
-
-
+    # class WomenModel:
+    #     def __init__(self, title, content):
+    #         self.title = title
+    #         self.content = content
+    #
 
 
     # title = serializers.CharField(max_length=255)
@@ -47,9 +33,6 @@ class WomenSerializer(serializers.ModelSerializer):
     #     instance.cat_id = validated_data.get("cat_id", instance.cat_id)
     #     instance.save()
     #     return instance
-
-
-
 
 #
 #
