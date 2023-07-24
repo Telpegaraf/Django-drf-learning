@@ -1,47 +1,32 @@
 from rest_framework import generics, viewsets, mixins
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from women.models import Women, Category
+from women.permissions import IsAdminOrReadOnly
 from women.serializers import WomenSerializer
 
 
-class WomenViewSet(mixins.CreateModelMixin,
-                   mixins.RetrieveModelMixin,
-                   mixins.UpdateModelMixin,
-                   mixins.ListModelMixin,
-                   GenericViewSet):
-    #queryset = Women.objects.all()
+class WomenAPIList(generics.ListCreateAPIView):
+    queryset = Women.objects.all()
     serializer_class = WomenSerializer
-
-    def get_queryset(self):
-        pk = self.kwargs.get("pk")
-
-        if not pk:
-            return Women.objects.all()[:3]
-
-        return Women.objects.filter(pk=pk)
-
-    @action(methods=['get'], detail=False)
-    def category(self, request, pk=None):
-        cats = Category.objects.get(pk=pk)
-        return Response({'cats': [cats.name]})
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
-# class WomenAPIList(generics.ListCreateAPIView):
-#     queryset = Women.objects.all()
-#     serializer_class = WomenSerializer
-#
-#
-# class WomenAPIUpdate(generics.UpdateAPIView):
-#     queryset = Women.objects.all()
-#     serializer_class = WomenSerializer
-#
-#
-# class WomenAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Women.objects.all()
-#     serializer_class = WomenSerializer
+class WomenAPIUpdate(generics.RetrieveUpdateAPIView):
+    queryset = Women.objects.all()
+    serializer_class = WomenSerializer
+    permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
+
+
+class WomenAPIDestroyView(generics.RetrieveDestroyAPIView):
+    queryset = Women.objects.all()
+    serializer_class = WomenSerializer
+    permission_classes = (IsAdminOrReadOnly,)
 
 # class WomenAPIView(APIView):
 #     def get(self, request):
@@ -75,3 +60,24 @@ class WomenViewSet(mixins.CreateModelMixin,
 # class WomenAPIView(generics.ListAPIView):
 #     queryset = Women.objects.all()
 #     serializer_class = WomenSerializer
+
+# class WomenViewSet(mixins.CreateModelMixin,
+#                    mixins.RetrieveModelMixin,
+#                    mixins.UpdateModelMixin,
+#                    mixins.ListModelMixin,
+#                    GenericViewSet):
+#     #queryset = Women.objects.all()
+#     serializer_class = WomenSerializer
+#
+#     def get_queryset(self):
+#         pk = self.kwargs.get("pk")
+#
+#         if not pk:
+#             return Women.objects.all()[:3]
+#
+#         return Women.objects.filter(pk=pk)
+#
+#     @action(methods=['get'], detail=False)
+#     def category(self, request, pk=None):
+#         cats = Category.objects.get(pk=pk)
+#         return Response({'cats': [cats.name]})
